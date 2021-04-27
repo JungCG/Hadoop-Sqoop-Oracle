@@ -40,20 +40,20 @@
 
 ## Sqoop Installation
 1. **Sqoop 압축파일 다운로드**
-    ```{.bash}
+    ```bash
     wget http://mirror.apache-kr.org/sqoop/1.4.7/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
     ```
 2. **압축 해제**
-    ```{.bash}
+    ```bash
     tar xvfz sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
     ```
 3. **Sqoop과 Hadoop 연동**, sqoop-env-template.sh 를 기반으로 설정파일 생성 및 수정 <sub>sqoop-1.4.7.bin__hadoop_2.6.0을 (SQOOP_HOME)으로 가정</sub>
-    ```{.bash}
+    ```bash
     (SQOOP_HOME)/conf# cp sqoop-env-template.sh sqoop-env.sh
     (SQOOP_HOME)/conf# vi sqoop-env.sh
     ```
     **HADOOP HOME Directory** 추가
-    ```{.bash}
+    ```bash
     export HADOOP_COMMON_HOME=(HADOOP HOME PATH 작성, 작성자 기준 : ~/Platform/hadoop-3.3.0)
     export HADOOP_MAPRED_HOME=(HADOOP HOME PATH 작성, 작성자 기준 : ~/Platform/hadoop-3.3.0)
     ```
@@ -76,11 +76,11 @@
             <img src = "Images/ojdbc.png", width="100%">
         </p> 
     2. RDBMS에 접속해서 **테이블 리스트** 받아오기
-        ```{.bash}
+        ```bash
         (SQOOP_HOME)/bin# ./sqoop list-tables --connect jdbc:oracle:thin:@{RDS End-Point / Host}:{port number}:{SID} --username {password} --password {password}
         ```
         **작성자 기준**
-        ```{.bash}
+        ```bash
         (SQOOP_HOME)/bin# ./sqoop list-tables --connect jdbc:oracle:thin:@potato-travel.c0qsmdnmd0gr.ap-northeast-2.rds.amazonaws.com:1521:orcl --username username --password password
         ```
         <p align="center">
@@ -90,11 +90,11 @@
         1. **-m** : 몇 개의 Map Job을 만들지 설정
         2. **--target-dir** : 가져온 데이터를 HDFS 어디에 저장할 것인지 설정
         3. 명령어
-            ```{.bash}
+            ```bash
             (SQOOP_HOME)/bin# ./sqoop import --connect jdbc:oracle:thin:@{RDS End-Point / Host}:{port number}:{SID} --username {password} --password {password} --table {TABLE_NAME 대문자로 작성!!} -m 1 --target-dir {hdfs destination}
             ```
             **작성자 기준**
-            ```{.bash}
+            ```bash
             (SQOOP_HOME)/bin# ./sqoop import --connect jdbc:oracle:thin:@potato-travel.c0qsmdnmd0gr.ap-northeast-2.rds.amazonaws.com:1521:orcl --username name --password password --table coronamap -m 1 --target-dir /user/potatotravel/sqoop-oracle-import/coronamap
             ```
             <p align="center">
@@ -104,12 +104,12 @@
                 <img src = "Images/import2.png", width="100%">
             </p>
     4. **HDFS에서 파일 확인**
-        ```{.bash}
+        ```bash
         (HADOOP_HOME)# hadoop dfs -ls <hdfs destination>
         (HADOOP_HOME)# hadoop dfs -cat <file in hdfs destination>
         ```
         **작성자 기준**
-        ```{.bash}
+        ```bash
         (HADOOP_HOME)# hadoop dfs -ls /user/potatotravel/sqoop-oracle-import/coronamap
         (HADOOP_HOME)# hadoop dfs -cat /user/potatotravel/sqoop-oracle-import/coronamap/part-m-00000
         ```
@@ -136,12 +136,12 @@
         1. **-m** : 몇 개의 Map Job을 만들지 설정
         2. **--export-dir** : HDFS의 어떤 데이터를 RDBMS로 보낼지 설정
         3. **명령어**
-            ```{.bash}
+            ```bash
             (SQOOP_HOME)/bin# 
             ./sqoop export --connect jdbc:oracle:thin:{RDS End-Point / Host}:{port number}:{port number}:{SID} --username {username} --password {password} --table {TABLE_NAME 대문자로 작성!!} -m 4 --export-dir {hdfs Source Directory}
             ```
             **작성자 기준**
-            ```{.bash}
+            ```bash
             (SQOOP_HOME)/bin# ./sqoop export --connect jdbc:oracle:thin:@potato-travel.c0qsmdnmd0gr.ap-northeast-2.rds.amazonaws.com:1521:orcl --username name --password password --table CORONAMAPEXPORT -m 4 --export-dir /user/potatotravel/sqoop-oracle-import/coronamap
             ```
             <p align="center">
